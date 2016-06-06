@@ -10,23 +10,25 @@ import java.util.HashMap;
 public class Main {
 
     static User user;
+
     static ArrayList<User> userList = new ArrayList<>();
-    static HashMap map = new HashMap();
-    static ArrayList<String> messageList = new ArrayList<>();
+    static ArrayList<Message> messageList = new ArrayList<>();
+
 
     public static void main(String[] args) {
+
         Spark.init();
         Spark.get(
                 "/",
                 (request, response) -> {
-
+                    HashMap map = new HashMap();
                     if (user == null) {
                         return new ModelAndView(map, "index.html");
                     }
                     else {
                         map.put("name", user.name);
                         map.put("password", user.password);
-                        map.put("message", messageList);
+                        map.put("messages", messageList);
                         return new ModelAndView(map, "messages.html");
                     }
                 },
@@ -47,7 +49,7 @@ public class Main {
                 "create-message",
                 (request, response) -> {
                     String message = request.queryParams("message");
-                    messageList.add(message);
+                    messageList.add(new Message(message));
                     response.redirect("/");
                     return "";
                 }
