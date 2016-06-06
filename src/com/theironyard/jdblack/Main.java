@@ -26,7 +26,7 @@ public class Main {
                     else {
                         map.put("name", user.name);
                         map.put("password", user.password);
-                        map.put("messages", messageList);
+                        map.put("message", messageList);
                         return new ModelAndView(map, "messages.html");
                     }
                 },
@@ -46,8 +46,9 @@ public class Main {
         Spark.post(
                 "create-message",
                 (request, response) -> {
-                    String message = request.queryParams("messages");
+                    String message = request.queryParams("message");
                     messageList.add(message);
+                    response.redirect("/");
                     return "";
                 }
         );
