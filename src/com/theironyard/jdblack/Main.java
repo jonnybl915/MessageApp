@@ -10,8 +10,7 @@ import java.util.HashMap;
 public class Main {
 
     static User user;
-
-    static ArrayList<User> userList = new ArrayList<>();
+    static HashMap<String, User> userMap = new HashMap();
     static ArrayList<Message> messageList = new ArrayList<>();
 
 
@@ -23,12 +22,13 @@ public class Main {
                 (request, response) -> {
                     HashMap map = new HashMap();
                     if (user == null) {
-                        return new ModelAndView(map, "index.html");
-                    }
+                        return new ModelAndView(map, "index.html"); }
+
                     else {
+
                         map.put("name", user.name);
-                        map.put("password", user.password);
                         map.put("messages", messageList);
+
                         return new ModelAndView(map, "messages.html");
                     }
                 },
@@ -39,8 +39,14 @@ public class Main {
                 (request, response) -> {
                     String username = request.queryParams("username");
                     String password = request.queryParams("password");
-                    user = new User(username, password);
-                    userList.add(user);
+                    user = userMap.get(username);
+                    if(user == null){
+                        user = new User(username, password);
+                        userMap.put(username, user);
+                    }
+                    if(!password.equals(user.password)) {
+                        user = null;
+                    }
                     response.redirect("/");
                     return "";
                 }
@@ -50,6 +56,14 @@ public class Main {
                 (request, response) -> {
                     String message = request.queryParams("message");
                     messageList.add(new Message(message));
+                    response.redirect("/");
+                    return "";
+                }
+        );
+        Spark.post(
+                "/logout",
+                (request, response) -> {
+                    user = null;
                     response.redirect("/");
                     return "";
                 }
