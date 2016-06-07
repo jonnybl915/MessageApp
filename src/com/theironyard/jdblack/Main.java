@@ -1,4 +1,5 @@
 package com.theironyard.jdblack;
+import jodd.json.JsonParser;
 import jodd.json.JsonSerializer;
 import spark.ModelAndView;
 import spark.Session;
@@ -6,10 +7,12 @@ import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Main {
 
@@ -18,6 +21,7 @@ public class Main {
     public static void main(String[] args) {
         Spark.staticFileLocation("/public"); //not sure if this is necessary
         Spark.init();
+        HashMap<String, User> userMap = readFileJson("MessageList.json")
         Spark.get(
                 "/",
                 (request, response) -> {
@@ -141,6 +145,18 @@ public class Main {
         FileWriter fw = new FileWriter(f);
         fw.write(json);
         fw.close();
+    }
+    public static HashMap<String, User> readFileJson() throws FileNotFoundException {
+        HashMap<String, User> userMap = new HashMap<>();
+        File f = new File("MessageList.json");
+        Scanner scanner = new Scanner(f);
+            String contents = scanner.next();
+            scanner.useDelimiter("\\Z");
+            JsonParser parser = new JsonParser();
+            parser.parse(contents);
+            HashMap<String, User> temp = parser.parse(contents, HashMap.class);
+
+        return temp;
     }
 }
 

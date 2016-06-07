@@ -29,7 +29,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{"+ name + '\'' + ", password='" + password + '\'' + ", messages=" + messages + '}' + '\'';
+        return "User{" + "name:" + name + '\'' + ", password='" + password + '\'' + ", messages=" + messages + '}' + '\'';
     }
 }
 
