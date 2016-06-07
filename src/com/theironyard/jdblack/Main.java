@@ -4,6 +4,7 @@ import spark.ModelAndView;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,6 +65,7 @@ public class Main {
                 "/logout",
                 (request, response) -> {
                     user = null;
+                    messageList = new ArrayList<Message>();
                     response.redirect("/");
                     return "";
                 }
