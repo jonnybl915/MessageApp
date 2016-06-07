@@ -117,10 +117,7 @@ public class Main {
                     if (id < 0 || id - 1 >= user.messages.size()){
                         throw new Exception("Invalid id");
                     }
-                    user.messages.get(id-1);
                     user.messages.set(id-1, new Message(editText));
-                    //user.messages.remove(id-1);
-                   // user.messages.add(new Message(editText));
                     response.redirect("/");
                     return "";
                 }

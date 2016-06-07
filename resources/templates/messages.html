@@ -1,11 +1,14 @@
 
 <html>
+<head>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
 <body>
 Messages by {{name}}
 <br>
 <br>
-<form action="/create-message" method="post">
-    <input type="text" name="message" placeholder="Type your message"/>
+<form action="/create-message"  method="post">
+    <input type="text" autofocus name="message" placeholder="Type your message"/>
     <button type="submit">Submit</button>
 </form>
 <br>
@@ -19,9 +22,12 @@ Messages by {{name}}
     <button type="submit">Edit Message</button>
 </form>
 <br>
+<p>
+    Messages:
+</p>
 <ol>
     {{#messages}}
-<li>{{message}}<br><form action="/delete-message" method="post"><button type="submit">Delete Message</button></form> </li>
+<li>{{message}}<form action="/delete-message" method="post"><button type="submit">Delete Message</button></form> </li>
     {{/messages}}
 </ol>
 <br>
