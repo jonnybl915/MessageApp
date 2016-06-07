@@ -1,8 +1,13 @@
 package com.theironyard.jdblack;
+import jodd.json.JsonSerializer;
 import spark.ModelAndView;
 import spark.Session;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +33,7 @@ public class Main {
                         User user = userMap.get(username);
                         map.put("messages", user.messages);
                         map.put("name", username);
-
+                        writeFileJson();
                         return new ModelAndView(map, "messages.html");
                     }
                 },
@@ -49,6 +54,7 @@ public class Main {
                     }
                     Session session = request.session();
                     session.attribute("username", username);
+                    writeFileJson();
 
                     response.redirect("/");
                     return "";
@@ -63,6 +69,7 @@ public class Main {
                     User user = userMap.get(username);
                     String message = request.queryParams("message");
                     user.messages.add(new Message(message));
+                    writeFileJson();
                     response.redirect("/");
                     return "";
                 }
@@ -72,6 +79,7 @@ public class Main {
                 (request, response) -> {
                     Session session = request.session();
                     session.invalidate();
+                    writeFileJson();
                     response.redirect("/");
                     return "";
                 }
@@ -92,6 +100,7 @@ public class Main {
                         throw new Exception("Invalid id");
                     }
                     user.messages.remove(id-1);
+                    writeFileJson();
 
                     response.redirect("/");
                     return "";
@@ -118,10 +127,20 @@ public class Main {
                         throw new Exception("Invalid id");
                     }
                     user.messages.set(id-1, new Message(editText));
+                    writeFileJson();
                     response.redirect("/");
                     return "";
                 }
         );
+    }
+    public static void writeFileJson() throws IOException {
+
+        File f = new File("MessageList.json");
+        JsonSerializer serializer = new JsonSerializer();
+        String json = serializer.include("*").serialize(userMap);
+        FileWriter fw = new FileWriter(f);
+        fw.write(json);
+        fw.close();
     }
 }
 

@@ -25,11 +25,13 @@ Messages by {{name}}
 <p>
     Messages:
 </p>
+<form action=/delete-message" method="post">
 <ol>
     {{#messages}}
-<li>{{message}}<form action="/delete-message" method="post"><button type="submit">Delete Message</button></form> </li>
+<li>{{message}} <button type="submit">Delete Message</button></li>
     {{/messages}}
 </ol>
+</form>
 <br>
 <br>
 <form action="logout" method="post">
