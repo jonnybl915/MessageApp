@@ -11,12 +11,13 @@ Messages by {{name}}
 
 <ol>
     {{#messages}}
-<li>{{message}}</li>
+<li>{{message}}<br><form action="/delete-message" method="post"><button type="submit">Delete Message</button></form> </li>
     {{/messages}}
 </ol>
 <br>
 <form action="logout" method="post">
     <button type="submit">Logout</button>
 </form>
+
 </body>
 </html>

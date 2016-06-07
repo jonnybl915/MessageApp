@@ -76,6 +76,25 @@ public class Main {
                     return "";
                 }
         );
+        Spark.post(
+                "/delete-message",
+                (request, response) -> {
+
+                    Session session = request.session();
+                    String username = session.attribute("username");
+
+                    User user = userMap.get(username);
+                    if (username == null){
+                        throw new Exception("Not logged in");
+                    }
+                    int i = -1;
+                    Message m = user.messages.get(i ++);
+                    user.messages.remove(m);
+                    response.redirect("/");
+                    return "";
+                }
+
+        );
     }
 }
 
