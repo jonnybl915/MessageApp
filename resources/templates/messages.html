@@ -8,16 +8,26 @@ Messages by {{name}}
     <input type="text" name="message" placeholder="Type your message"/>
     <button type="submit">Submit</button>
 </form>
-
+<br>
+<form action="/delete-message" method="post">
+    <input type="number" name="id" placeholder="#"/>
+    <button type="submit">Delete Message</button>
+</form>
+<form action="/edit-message" method="post">
+    <input type="number" name="id" placeholder="#"/>
+    <input type="text" name="newMessage" placeholder="Edit your message"/>
+    <button type="submit">Edit Message</button>
+</form>
+<br>
 <ol>
     {{#messages}}
 <li>{{message}}<br><form action="/delete-message" method="post"><button type="submit">Delete Message</button></form> </li>
     {{/messages}}
 </ol>
 <br>
+<br>
 <form action="logout" method="post">
     <button type="submit">Logout</button>
 </form>
-
 </body>
 </html>
