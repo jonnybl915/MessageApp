@@ -87,13 +87,43 @@ public class Main {
                     if (username == null){
                         throw new Exception("Not logged in");
                     }
-                    int i = -1;
-                    Message m = user.messages.get(i ++);
-                    user.messages.remove(m);
+                    int id = Integer.valueOf(request.queryParams("id"));
+                    if (id < 0 || id - 1 >= user.messages.size()){
+                        throw new Exception("Invalid id");
+                    }
+                    user.messages.remove(id-1);
+
+                    response.redirect("/");
+                    return "";
+//                    int i = 1;
+//                    Message m = user.messages.get(i ++);
+//                    user.messages.remove(m);
+//                    response.redirect("/");
+//                    return "";
+                }
+
+        );
+        Spark.post(
+                "/edit-message",
+                (request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("username");
+                    String editText = request.queryParams("newMessage");
+                    User user = userMap.get(username);
+                    if (username == null){
+                        throw new Exception("Not logged in");
+                    }
+                    int id = Integer.valueOf(request.queryParams("id"));
+                    if (id < 0 || id - 1 >= user.messages.size()){
+                        throw new Exception("Invalid id");
+                    }
+                    user.messages.get(id-1);
+                    user.messages.set(id-1, new Message(editText));
+                    //user.messages.remove(id-1);
+                   // user.messages.add(new Message(editText));
                     response.redirect("/");
                     return "";
                 }
-
         );
     }
 }
