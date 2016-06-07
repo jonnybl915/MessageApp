@@ -1,12 +1,10 @@
 package com.theironyard.jdblack;
-
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import static spark.Spark.staticFileLocation;
 
 public class Main {
 
@@ -16,14 +14,14 @@ public class Main {
 
 
     public static void main(String[] args) {
-
+        Spark.staticFileLocation("public"); //not sure if this is necessary
         Spark.init();
         Spark.get(
                 "/",
                 (request, response) -> {
                     HashMap map = new HashMap();
                     if (user == null) {
-                        return new ModelAndView(map, "index.html"); }
+                        return new ModelAndView(map, "index.html"); } //this gets it to compile
 
                     else {
 
@@ -33,13 +31,13 @@ public class Main {
                         return new ModelAndView(map, "messages.html");
                     }
                 },
-                new MustacheTemplateEngine()
+                new MustacheTemplateEngine() //so it knows how to parse the template. normally only on a get route
         );
         Spark.post(
                 "/create-user",
                 (request, response) -> {
-                    String username = request.queryParams("username");
-                    String password = request.queryParams("password");
+                    String username = request.queryParams("username"); //"username" corresponds to the form in index.html
+                    String password = request.queryParams("password"); //'password' "                                   "
                     user = userMap.get(username);
                     if(user == null){
                         user = new User(username, password);
@@ -65,7 +63,7 @@ public class Main {
                 "/logout",
                 (request, response) -> {
                     user = null;
-                    messageList = new ArrayList<Message>();
+                    messageList = new ArrayList<>();
                     response.redirect("/");
                     return "";
                 }
