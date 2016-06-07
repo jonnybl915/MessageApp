@@ -1,20 +1,20 @@
 package com.theironyard.jdblack;
 import spark.ModelAndView;
+import spark.Session;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 import java.util.ArrayList;
 import java.util.HashMap;
-import static spark.Spark.staticFileLocation;
 
 public class Main {
 
-    static User user;
+    static User user; //remove this
     static HashMap<String, User> userMap = new HashMap();
     static ArrayList<Message> messageList = new ArrayList<>();
 
 
     public static void main(String[] args) {
-        Spark.staticFileLocation("public"); //not sure if this is necessary
+        Spark.staticFileLocation("/public"); //not sure if this is necessary
         Spark.init();
         Spark.get(
                 "/",
@@ -62,7 +62,9 @@ public class Main {
         Spark.post(
                 "/logout",
                 (request, response) -> {
-                    user = null;
+                   // Session session = request.session(); //add
+                   // session.invalidate();
+                    user = null; //remove
                     messageList = new ArrayList<>();
                     response.redirect("/");
                     return "";
