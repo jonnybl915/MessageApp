@@ -8,10 +8,7 @@ import java.util.HashMap;
 
 public class Main {
 
-    static User user; //remove this
     static HashMap<String, User> userMap = new HashMap();
-    static ArrayList<Message> messageList = new ArrayList<>();
-
 
     public static void main(String[] args) {
         Spark.staticFileLocation("/public"); //not sure if this is necessary
@@ -19,14 +16,18 @@ public class Main {
         Spark.get(
                 "/",
                 (request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("username");
                     HashMap map = new HashMap();
-                    if (user == null) {
+
+                    if (username == null) {
                         return new ModelAndView(map, "index.html"); } //this gets it to compile
 
                     else {
 
-                        map.put("name", user.name);
-                        map.put("messages", messageList);
+                        User user = userMap.get(username);
+                        map.put("messages", user.messages);
+                        map.put("name", username);
 
                         return new ModelAndView(map, "messages.html");
                     }
@@ -37,15 +38,18 @@ public class Main {
                 "/create-user",
                 (request, response) -> {
                     String username = request.queryParams("username"); //"username" corresponds to the form in index.html
-                    String password = request.queryParams("password"); //'password' "                                   "
-                    user = userMap.get(username);
+                    String password = request.queryParams("password"); //'password' "                                 "
+                    User user = userMap.get(username);
                     if(user == null){
                         user = new User(username, password);
                         userMap.put(username, user);
                     }
                     if(!password.equals(user.password)) {
-                        user = null;
+                        throw new Exception("Incorrect Password");
                     }
+                    Session session = request.session();
+                    session.attribute("username", username);
+
                     response.redirect("/");
                     return "";
                 }
@@ -53,8 +57,12 @@ public class Main {
         Spark.post(
                 "create-message",
                 (request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("username");
+
+                    User user = userMap.get(username);
                     String message = request.queryParams("message");
-                    messageList.add(new Message(message));
+                    user.messages.add(new Message(message));
                     response.redirect("/");
                     return "";
                 }
@@ -62,10 +70,8 @@ public class Main {
         Spark.post(
                 "/logout",
                 (request, response) -> {
-                   // Session session = request.session(); //add
-                   // session.invalidate();
-                    user = null; //remove
-                    messageList = new ArrayList<>();
+                    Session session = request.session();
+                    session.invalidate();
                     response.redirect("/");
                     return "";
                 }
