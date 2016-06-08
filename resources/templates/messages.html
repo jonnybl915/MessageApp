@@ -1,5 +1,6 @@
 
 <html>
+
 <head>
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -28,7 +29,14 @@ Messages by {{name}}
 <form>
 <ol>
     {{#messages}}
-<li>{{message}} </li>
+<li>
+    {{message}}
+    <form action="/delete-message" method="post" style="display: inline-block;">
+        <input type="hidden" name="id" value="{{id}}"/>
+        <button type="submit">Delete Message</button>
+    </form>
+    <br>
+</li>
     {{/messages}}
 </ol>
 </form>

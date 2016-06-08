@@ -5,9 +5,11 @@ package com.theironyard.jdblack;
  */
 public class Message {
     String message;
+    int id;
 
     public Message(String message) {
         this.message = message;
+
     }
 
     public String getMessage() {

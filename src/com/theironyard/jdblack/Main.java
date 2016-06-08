@@ -17,22 +17,26 @@ public class Main {
     static HashMap<String, User> userMap = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-        Spark.staticFileLocation("/public"); //not sure if this is necessary
+        Spark.staticFileLocation("/public");
         HashMap<String, User> tempMap = readFileJson();
         Spark.init();
         Spark.get(
                 "/",
                 (request, response) -> {
                     Session session = request.session();
-                    String username = session.attribute("username");
+                    String username = session.attribute("username"); //requesting the session value
                     HashMap map = new HashMap();
 
                     if (username == null) {
                         return new ModelAndView(map, "index.html"); } //this gets it to compile
 
                     else {
-
                         User user = userMap.get(username);
+
+                        int id = 1;
+                        for (Message msg : user.messages)
+                        msg.id = id;
+                        id++;
                         map.put("messages", user.messages);
                         map.put("name", username);
                         writeFileJson();
@@ -46,8 +50,8 @@ public class Main {
                 (request, response) -> {
                     String username = request.queryParams("username"); //"username" corresponds to the form in index.html
                     String password = request.queryParams("password"); //'password' "                                 "
-                    User user = userMap.get(username);
-                    if(user == null){
+                    User user = userMap.get(username); //if they are not in the map then username will be null thus making user null
+                    if(user == null){                   //--which is ok bc we are checking for that here
                         user = new User(username, password);
                         userMap.put(username, user);
                     }
@@ -55,7 +59,7 @@ public class Main {
                         throw new Exception("Incorrect Password");
                     }
                     Session session = request.session();
-                    session.attribute("username", username);
+                    session.attribute("username", username); //as with a HashMap this is putting a key value pair into the session
                     writeFileJson();
 
                     response.redirect("/");
@@ -65,10 +69,10 @@ public class Main {
         Spark.post(
                 "create-message",
                 (request, response) -> {
-                    Session session = request.session();
-                    String username = session.attribute("username");
+                    Session session = request.session();                //1. get session
+                    String username = session.attribute("username");    //2. get username
 
-                    User user = userMap.get(username);
+                    User user = userMap.get(username);                  //3. get user object out of the HashMap
                     String message = request.queryParams("message");
                     user.messages.add(new Message(message));
                     writeFileJson();
